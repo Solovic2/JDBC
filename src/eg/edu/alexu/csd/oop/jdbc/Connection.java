@@ -12,14 +12,21 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Savepoint;
-import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
 public class Connection implements java.sql.Connection {
-
+	/*****************************Singleton Design Pattern********************************************/
+	private static Connection instance = new Connection(); 
+	
+	private  Connection(){}
+	
+	public static Connection get_instance() {
+		return instance;
+	}
+	/*******************************************************************************************************/
 	@Override
 	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
 		// TODO Auto-generated method stub
@@ -47,7 +54,7 @@ public class Connection implements java.sql.Connection {
 	@Override
 	public void close() throws SQLException {
 		// TODO Auto-generated method stub
-		
+		instance = null;
 	}
 
 	@Override
@@ -89,7 +96,8 @@ public class Connection implements java.sql.Connection {
 	@Override
 	public Statement createStatement() throws SQLException {
 		// TODO Auto-generated method stub
-		return null;
+		Statement stat = new Statement();
+		return stat;
 	}
 
 	@Override
@@ -199,7 +207,6 @@ public class Connection implements java.sql.Connection {
 	public String nativeSQL(String sql) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
-	}
 
 	@Override
 	public CallableStatement prepareCall(String sql) throws SQLException {
