@@ -21,10 +21,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 
-<<<<<<< HEAD
-public class ResultSet implements java.sql.ResultSet {
-	private Object[][] Result = null;
-=======
 import javax.management.InstanceAlreadyExistsException;
 
 import org.junit.runners.ParentRunner;
@@ -34,28 +30,19 @@ public class ResultSet implements java.sql.ResultSet{
 	private int cursor = 0;
 	private Object[][] Result = null;
 	private Statement StatementObject = null;
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
 	/*****************************Singleton Design Pattern********************************************/
 	private static ResultSet instance = new ResultSet(); 
 	
 	private  ResultSet(){}
 	
-<<<<<<< HEAD
-=======
 	
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
 	public static ResultSet get_instance() {
 		return instance;
 	}
 	/*******************************************************************************************************/
-<<<<<<< HEAD
-	public void set_Result(Object[][] x) {
-		Result = x;
-=======
 	public void set_Result(Object[][] x, Statement y) {
 		Result = x;
 		StatementObject = y;
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
 	}
 	/**********************************************************************************************************/
 	@Override
