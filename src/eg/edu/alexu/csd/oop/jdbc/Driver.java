@@ -1,6 +1,8 @@
 package eg.edu.alexu.csd.oop.jdbc;
 
+import java.io.File;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -15,14 +17,15 @@ public class Driver implements java.sql.Driver {
 
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		File file = new File(url);
+		return file.isDirectory();
 	}
 
 	@Override
 	public Connection connect(String url, Properties info) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		File dir = (File) info.get("path");
+		String path = dir.getAbsolutePath();
+		return DriverManager.getConnection(path);
 	}
 
 	@Override
@@ -46,6 +49,7 @@ public class Driver implements java.sql.Driver {
 	@Override
 	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

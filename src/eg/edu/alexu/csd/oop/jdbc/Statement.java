@@ -5,15 +5,41 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.util.Stack;
+import eg.edu.alexu.csd.oop.db.Check;
+import eg.edu.alexu.csd.oop.db.DB;
+import eg.edu.alexu.csd.oop.db.Facade;
 
 public class Statement implements java.sql.Statement {
-
+	
+	DB db=DB.get_instance();
 	Stack<String> sql_list=new Stack<String>();
 
 	@Override
 	public void addBatch(String sql) throws SQLException {
 		// TODO Auto-generated method stub
-		sql_list.push(sql);
+	 Check ch = Check.get_instance();
+	 String First_Word = sql.substring(0, sql.indexOf(" "));
+		String [] s = new String [100] ;
+		switch(First_Word) {
+		case "drop": s[0]=ch.dropscheck(sql);
+			break;
+		case "select":s = ch.selectcheck(sql);
+			break;
+		case "delete": s= ch.deletecheck(sql);
+			break;
+		case "insert": s = ch.insertcheck(sql);
+			break;
+		case "update":s = ch.updatecheck(sql);
+			break;
+		case "create": s=ch.createcheck(sql);
+			break;	
+		default: s=null;
+		    break;
+		}	
+		if ( s != null) {
+			sql_list.push(sql);
+		}
+		
 	}
 
 
@@ -31,8 +57,13 @@ public class Statement implements java.sql.Statement {
 
 	@Override
 	public boolean execute(String sql) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		Facade f=new Facade();
+		try {
+			f.do_query(sql);
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
 	}
 
 	
@@ -45,14 +76,15 @@ public class Statement implements java.sql.Statement {
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		eg.edu.alexu.csd.oop.jdbc.ResultSet r =  eg.edu.alexu.csd.oop.jdbc.ResultSet.get_instance();
+		r.set_Result(db.executeQuery(sql));
+		return r;
 	}
 
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
 		// TODO Auto-generated method stub
-		return 0;
+		return db.executeUpdateQuery(sql);
 	}
 
 	

@@ -22,7 +22,20 @@ import java.util.Calendar;
 import java.util.Map;
 
 public class ResultSet implements java.sql.ResultSet {
-
+	private Object[][] Result = null;
+	/*****************************Singleton Design Pattern********************************************/
+	private static ResultSet instance = new ResultSet(); 
+	
+	private  ResultSet(){}
+	
+	public static ResultSet get_instance() {
+		return instance;
+	}
+	/*******************************************************************************************************/
+	public void set_Result(Object[][] x) {
+		Result = x;
+	}
+	/**********************************************************************************************************/
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		// TODO Auto-generated method stub
