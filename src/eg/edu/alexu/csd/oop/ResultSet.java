@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.jdbc;
+package eg.edu.alexu.csd.oop;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -15,16 +15,12 @@ import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.SQLXML;
-import java.sql.Statement;
+
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 
-<<<<<<< HEAD
-public class ResultSet implements java.sql.ResultSet {
-	private Object[][] Result = null;
-=======
 import javax.management.InstanceAlreadyExistsException;
 
 import org.junit.runners.ParentRunner;
@@ -33,29 +29,25 @@ public class ResultSet implements java.sql.ResultSet{
 
 	private int cursor = 0;
 	private Object[][] Result = null;
-	private Statement StatementObject = null;
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
+	private eg.edu.alexu.csd.oop.Statement StatementObject = null;
 	/*****************************Singleton Design Pattern********************************************/
 	private static ResultSet instance = new ResultSet(); 
 	
 	private  ResultSet(){}
 	
-<<<<<<< HEAD
-=======
 	
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
 	public static ResultSet get_instance() {
+		
+		
 		return instance;
 	}
 	/*******************************************************************************************************/
-<<<<<<< HEAD
-	public void set_Result(Object[][] x) {
-		Result = x;
-=======
 	public void set_Result(Object[][] x, Statement y) {
+		System.out.println("x--lenght"+x.length);
 		Result = x;
+		cursor=0;
+		System.out.println("Result--lenght"+Result.length);
 		StatementObject = y;
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
 	}
 	/**********************************************************************************************************/
 	@Override
@@ -183,7 +175,9 @@ public class ResultSet implements java.sql.ResultSet{
 
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
+		ResultSetMetaData.get_instance().set_Result(Result, StatementObject);
 		return ResultSetMetaData.get_instance();
+		
 	}
 	
 	
@@ -492,8 +486,15 @@ public class ResultSet implements java.sql.ResultSet{
 
 	@Override
 	public Object getObject(int arg0) throws SQLException {
+		for(int i = 0;i < Result.length ; i++) {
+			for(int j = 0 ; j < Result[0].length;j++) {
+				System.out.print(Result[i][j]+"                  ");
+			}System.out.println(" ");
+
+		}
 		if(cursor > 0 && cursor < Result.length) {
-			return  Result[cursor][arg0];
+			System.out.println("cursor  "+cursor);
+			return  Result[cursor][arg0-1];
 		}
 		return null;
 	}
@@ -726,11 +727,11 @@ public class ResultSet implements java.sql.ResultSet{
 	@Override
 	public boolean next() throws SQLException {
 		if(Result == null) return false;
-		if(cursor+1 < Result.length) { 
+		if(cursor+1 <= Result.length-1) { 
+			System.out.println("the lenght with out the colomn name"+(Result.length-1));
 			cursor++;
 			return true;}
-		
-		cursor = Result.length;
+
 		return false;
 	}
 

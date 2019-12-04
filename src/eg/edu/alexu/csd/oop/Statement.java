@@ -1,22 +1,36 @@
-package eg.edu.alexu.csd.oop.jdbc;
+package eg.edu.alexu.csd.oop;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.*;
+
 import eg.edu.alexu.csd.oop.db.Check;
 import eg.edu.alexu.csd.oop.db.DB;
 import eg.edu.alexu.csd.oop.db.Facade;
 
 public class Statement implements java.sql.Statement {
-	
-	DB db=DB.get_instance();
-	Stack<String> sql_list=new Stack<String>();
-
+	private Timer timer = new Timer(true);
+	private boolean timeout =false;
+	private int waitTimeout =0;
+	private InterruptTimerTask interruptTimerTask = new InterruptTimerTask(Thread.currentThread());
+	private String table_name = null ;
+	private DB db=DB.get_instance();
+	private Stack<String> sql_list=new Stack<String>();
+	public String get_table_name() {
+		return table_name;
+	}
+	public void set_table_name(String r) {
+		table_name=r;
+	} 
 	@Override
 	public void addBatch(String sql) throws SQLException {
 		// TODO Auto-generated method stub
+		
 	 Check ch = Check.get_instance();
 	 String First_Word = sql.substring(0, sql.indexOf(" "));
 		String [] s = new String [100] ;
@@ -24,6 +38,7 @@ public class Statement implements java.sql.Statement {
 		case "drop": s[0]=ch.dropscheck(sql);
 			break;
 		case "select":s = ch.selectcheck(sql);
+			set_table_name(s[0]);
 			break;
 		case "delete": s= ch.deletecheck(sql);
 			break;
@@ -58,11 +73,33 @@ public class Statement implements java.sql.Statement {
 	@Override
 	public boolean execute(String sql) throws SQLException {
 		Facade f=new Facade();
+		if(waitTimeout==0) {
+			try {
+				f.do_query(sql);
+				timeout = false ;
+				return true;
+			}catch (SQLException e) {
+				return false;
+			}
+		}
+		else {
+		timer.schedule(interruptTimerTask, waitTimeout);
+		
 		try {
 			f.do_query(sql);
+			timeout = false ;
 			return true;
-		} catch (SQLException e) {
+		}catch (SQLException e) {
 			return false;
+		}
+		catch (Exception e) {
+			timeout = true;
+			
+		}
+		finally {
+		    timer.cancel();
+		}
+		return false;
 		}
 	}
 
@@ -76,28 +113,77 @@ public class Statement implements java.sql.Statement {
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		eg.edu.alexu.csd.oop.jdbc.ResultSet r =  eg.edu.alexu.csd.oop.jdbc.ResultSet.get_instance();
-		r.set_Result(db.executeQuery(sql));
-		return r;
+		
+		if(waitTimeout==0) {
+			
+			eg.edu.alexu.csd.oop.ResultSet r =  eg.edu.alexu.csd.oop.ResultSet.get_instance();
+			Object[][] b= db.executeQuery(sql);
+				r.set_Result(b,this);
+				System.out.println("array without islam yousry");
+				for(int i = 0;i < b.length ; i++) {
+					for(int j = 0 ; j < b[0].length;j++) {
+						System.out.print(b[i][j]+"                  ");
+					}System.out.println(" ");
+
+				}
+			return r;
+		}
+		else {
+			timer.schedule(interruptTimerTask, waitTimeout);
+			try {
+				
+				eg.edu.alexu.csd.oop.ResultSet r =  eg.edu.alexu.csd.oop.ResultSet.get_instance();
+			r.set_Result(db.executeQuery(sql),this);
+			timeout = false ;
+		
+				return r;
+			} catch(Exception e) {
+				timeout = true;
+			}finally {
+			    timer.cancel();
+			}
+			return null;
+		}
 	}
 
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
+		if(waitTimeout==0) {
+			timeout = false ;
+			return db.executeUpdateQuery(sql);
+		}
+		else {
+		timer.schedule(interruptTimerTask, waitTimeout);
 		// TODO Auto-generated method stub
-		return db.executeUpdateQuery(sql);
+		try {
+			timeout = false ;
+			return db.executeUpdateQuery(sql);
+			
+		} catch (Exception e) {
+			timeout = true;
+		}finally {
+		    timer.cancel();
+		}
+		return 0;
+		}
+		
 	}
 
 	
 
 	@Override
 	public int getQueryTimeout() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return waitTimeout;
 	}
 
 	@Override
 	public void setQueryTimeout(int seconds) throws SQLException {
 		// TODO Auto-generated method stub
+		waitTimeout =seconds;
+		if (timeout == true) {
+			SQLException s = new SQLException();
+			throw s;
+		}
 		
 	}
 	/**************************Unimplemented *****************************************************************/

@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.jdbc;
+package eg.edu.alexu.csd.oop;
 
 import java.sql.Array;
 import java.sql.Blob;
@@ -207,7 +207,7 @@ public class Connection implements java.sql.Connection {
 	public String nativeSQL(String sql) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
-
+	}
 	@Override
 	public CallableStatement prepareCall(String sql) throws SQLException {
 		// TODO Auto-generated method stub
@@ -216,7 +216,6 @@ public class Connection implements java.sql.Connection {
 
 	@Override
 	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

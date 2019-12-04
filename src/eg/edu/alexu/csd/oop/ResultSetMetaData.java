@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.jdbc;
+package eg.edu.alexu.csd.oop;
 
 import java.sql.SQLException;
 import java.sql.Types;
@@ -19,9 +19,10 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData{
 	}
 	
 	/************************************************************************************/
-	public void set_Result(Object[][] x,Statement y) {
+	public void set_Result(Object[][] x, Statement y) {
+		
 		Result = x;
-		table_name=y.get_Statement();
+		table_name=y.get_table_name();
 	}
 	/**********************************************************************************************************/
 	

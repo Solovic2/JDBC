@@ -1,15 +1,10 @@
-package eg.edu.alexu.csd.oop.jdbc;
+package eg.edu.alexu.csd.oop;
 
-<<<<<<< HEAD
-import java.io.File;
-import java.sql.Connection;
-=======
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
 import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
@@ -32,11 +27,7 @@ public class Driver implements java.sql.Driver {
 	String save=null;
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
-<<<<<<< HEAD
-		File file = new File(url);
-		return file.isDirectory();
-=======
-		File newfile = new File("F:\\personal pics\\Bahaa\\programs\\second year term 1\\programming\\omarmohamedemam-dbms-1410883b5be8\\DB_PATHES.txt");
+		File newfile = new File("D:\\\\DBMS\\\\DB_PATHES.txt");
 		boolean isExist=false;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(newfile));
@@ -54,44 +45,40 @@ public class Driver implements java.sql.Driver {
 			e.printStackTrace();
 		}
 		return isExist;
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
 	}
 
 	@Override
 	public Connection connect(String url, Properties info) throws SQLException {
 		File dir = (File) info.get("path");
 		String path = dir.getAbsolutePath();
-<<<<<<< HEAD
-		return DriverManager.getConnection(path);
-=======
-//		File newfile = new File("F:\\personal pics\\Bahaa\\programs\\second year term 1\\programming\\omarmohamedemam-dbms-1410883b5be8\\DB_PATHES.txt");
-//		try {
-//			BufferedReader br = new BufferedReader(new FileReader(newfile));
-//			String line=null;
-//			while((line = br.readLine()) != null) {
-//				if(line.trim().contains("PATH: "+path)) {
-//					
-//				}
-//			}
-//			br.close();
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+/*		File newfile = new File("F:\\personal pics\\Bahaa\\programs\\second year term 1\\programming\\omarmohamedemam-dbms-1410883b5be8\\DB_PATHES.txt");
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(newfile));
+			String line=null;
+			while((line = br.readLine()) != null) {
+				if(line.trim().contains("PATH: "+path)) {
+					
+				}
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 		Connection cc=Connection.get_instance();
 		if(acceptsURL(path)) {
-			cc.setElconnect(save);
+//			cc.setElconnect(save);
 			return cc;
 		}
 		return cc;
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
+//		return null;
 	}
 
 	@Override
 	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
 		DriverPropertyInfo[] dpi=new DriverPropertyInfo[0];
-		acceptsURL(url);
+	
 		return null;
 	}
 	
@@ -114,16 +101,6 @@ public class Driver implements java.sql.Driver {
 	}
 
 	@Override
-<<<<<<< HEAD
-	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-		// TODO Auto-generated method stub
-		
-		return null;
-	}
-
-	@Override
-=======
->>>>>>> 40796eb807546b677e455d238fe710d82d48c944
 	public boolean jdbcCompliant() {
 		// TODO Auto-generated method stub
 		return false;

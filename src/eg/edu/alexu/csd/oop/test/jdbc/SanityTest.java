@@ -23,6 +23,7 @@ public class SanityTest {
         File dbDir = new File("sample" + System.getProperty("file.separator") + ((int)(Math.random() * 100000)));
         info.put("path", dbDir.getAbsoluteFile());
         Connection connection = driver.connect("jdbc:xmldb://localhost", info);
+        //System.out.println("000000"+info.getProperty("path"));
         Statement statement = connection.createStatement();
         statement.execute("DROP DATABASE " + databaseName);
         if(drop)
@@ -219,25 +220,31 @@ public class SanityTest {
             
             ResultSet result = statement.executeQuery("SELECT * FROM table_name1 WHERE coluMN_NAME2 < 6");
             int rows = 0;
-            while(result.next())    rows++;
+           
+            while(result.next()) rows++;
+            System.out.println("ggggggggggggggggggggggggggggggggggg"+rows);
             Assert.assertNotNull("Null result returned", result);
-            Assert.assertEquals("Wrong number of rows", 1, rows);
-            Assert.assertEquals("Wrong number of columns", 3, result.getMetaData().getColumnCount());
+            Assert.assertEquals("Wrong number of rows",1, rows);
+            Assert.assertEquals("Wrongns", 3, result.getMetaData().getColumnCount());
             
             int count5 = statement.executeUpdate("UPDATE table_name1 SET column_name1='11111111', COLUMN_NAME2=10, column_name3='333333333' WHERE coLUmn_NAME2=5");
             Assert.assertEquals("Update returned wrong number", 1, count5);
             
             ResultSet result2 = statement.executeQuery("SELECT * FROM table_name1 WHERE coluMN_NAME2 > 4");
+           
             int rows2 = 0;
             while(result2.next())   rows2++;
+            
             Assert.assertNotNull("Null result returned", result2);
             Assert.assertEquals("Wrong number of rows", 2, rows2);
             Assert.assertEquals("Wrong number of columns", 3, result2.getMetaData().getColumnCount());
             
-            //Object column_2_object = result2[0][1];
+         //   Object column_2_object = result2[0][1];
             while(result2.previous());
             result2.next();
             Object column_2_object = result2.getObject(2);
+           // System.out.println(column_2_object);
+           // System.out.println(result2.getObject(2));
             if (column_2_object instanceof String)
                 fail("This should be 'Integer', but found 'String'!");
             else if (column_2_object instanceof Integer) {
