@@ -29,34 +29,23 @@ public class ResultSet implements java.sql.ResultSet{
 
 	private int cursor = 0;
 	private Object[][] Result = null;
-	private eg.edu.alexu.csd.oop.Statement StatementObject = null;
-	/*****************************Singleton Design Pattern********************************************/
-	private static ResultSet instance = new ResultSet(); 
-	
-	private  ResultSet(){}
-	
-	
-	public static ResultSet get_instance() {
-		
-		
-		return instance;
-	}
-	/*******************************************************************************************************/
-	public void set_Result(Object[][] x, Statement y) {
-		System.out.println("x--lenght"+x.length);
-		Result = x;
+	private String[] cols_names = null;
+	private Statement StatementObject = null;
+	private boolean Isclosed = false;
+	public void set_Result(Object[][] selected, String[] cols_names,Statement y) {
+		Result = selected;
+		this.cols_names = cols_names;
 		cursor=0;
-		System.out.println("Result--lenght"+Result.length);
 		StatementObject = y;
 	}
 	/**********************************************************************************************************/
 	@Override
 	public boolean absolute(int arg0) throws SQLException {
-		if(arg0 >= 0 && arg0 < Result.length) {
+		if(arg0 >= 0 && arg0 < Result.length && !Isclosed) {
 			cursor = arg0;
 			return true;
 		}
-		else if(arg0 < 0 && Math.abs(arg0) < Result.length) {
+		else if(arg0 < 0 && Math.abs(arg0) < Result.length && !Isclosed) {
 			cursor = Result.length + arg0;
 			return true;
 		}
@@ -65,36 +54,40 @@ public class ResultSet implements java.sql.ResultSet{
 
 	@Override
 	public void afterLast() throws SQLException {
-		if(Result != null) {
+		if(Result != null && !Isclosed) {
 			cursor = Result.length;}
 		
 	}
 
 	@Override
 	public void beforeFirst() throws SQLException {
-		cursor = 0;
+		if(!Isclosed)cursor = 0;
 	}
 
 	@Override
 	public int findColumn(String arg0) throws SQLException { 
-		int i ;
-		boolean flag = false;
-		for(i = 0 ; i < Result[0].length ; i++) {
-			if(Result[0][i].equals(arg0)) {
-				flag = true;
-				break;
+		if(!Isclosed) {
+			int i ;
+			boolean flag = false;
+			for(i = 0 ; i < Result[0].length ; i++) {
+				if(Result[0][i].equals(arg0)) {
+					flag = true;
+					break;
+				}
 			}
-		}
+		
 		
 		if(flag) {
 			return i;
 		}
 		return -1;
+		}
+	return -2;
 	}
 
 	@Override
 	public boolean first() throws SQLException {
-		if(Result == null) return false;
+		if(Result == null || Isclosed) return false;
 		cursor = 1;
 		return true;
 	}
@@ -102,11 +95,11 @@ public class ResultSet implements java.sql.ResultSet{
 	@Override
 	public int getInt(int arg0) throws SQLException {
 		if(cursor > 0 && cursor < Result.length && arg0 > 0 && arg0 < Result[0].length) {	
-			if(Result[cursor][arg0] == null) {
+			if(Result[cursor-1][arg0] == null) {
 				return 0;
 			}
-			if(Result[cursor][arg0] instanceof Integer) {
-			return (int) Result[cursor][arg0];
+			if(Result[cursor-1][arg0] instanceof Integer) {
+			return (int) Result[cursor-1][arg0];
 			}
 		}
 		return 0;
@@ -122,11 +115,11 @@ public class ResultSet implements java.sql.ResultSet{
 				flag = true;
 			}
 			if(flag) {
-				if(Result[cursor][i] == null) {
+				if(Result[cursor-1][i] == null) {
 					return 0;
 				}
-				if(Result[cursor][i] instanceof Integer)
-				return (int) Result[cursor][i];
+				if(Result[cursor-1][i] instanceof Integer)
+				return (int) Result[cursor-1][i];
 			}
 		}
 		return 0;
@@ -143,11 +136,11 @@ public class ResultSet implements java.sql.ResultSet{
 	@Override
 	public String getString(int arg0) throws SQLException {
 		if(cursor > 0 && cursor < Result.length && arg0 > 0 && arg0 < Result[0].length) {
-			if(Result[cursor][arg0] == null) {
+			if(Result[cursor-1][arg0] == null) {
 					return null;
 			}
-			if(Result[cursor][arg0] instanceof String)
-				return (String) Result[cursor][arg0];
+			if(Result[cursor-1][arg0] instanceof String)
+				return (String) Result[cursor-1][arg0];
 			}
 		
 		return null;
@@ -163,11 +156,11 @@ public class ResultSet implements java.sql.ResultSet{
 				flag = true;
 			}
 			if(flag) {
-				if(Result[cursor][i] == null) {
+				if(Result[cursor-1][i] == null) {
 					return null;
 				}
-				if(Result[cursor][i] instanceof String)
-					return (String) Result[cursor][i];
+				if(Result[cursor-1][i] instanceof String)
+					return (String) Result[cursor-1][i];
 			}
 		}
 		return null;
@@ -175,9 +168,8 @@ public class ResultSet implements java.sql.ResultSet{
 
 	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
-		ResultSetMetaData.get_instance().set_Result(Result, StatementObject);
+		ResultSetMetaData.get_instance().set_Result(Result, cols_names, StatementObject);
 		return ResultSetMetaData.get_instance();
-		
 	}
 	
 	
@@ -213,7 +205,8 @@ public class ResultSet implements java.sql.ResultSet{
 
 	@Override
 	public void close() throws SQLException {
-		instance = null;
+		Isclosed = true;
+		//instance = null;
 	}
 
 	@Override
@@ -486,15 +479,8 @@ public class ResultSet implements java.sql.ResultSet{
 
 	@Override
 	public Object getObject(int arg0) throws SQLException {
-		for(int i = 0;i < Result.length ; i++) {
-			for(int j = 0 ; j < Result[0].length;j++) {
-				System.out.print(Result[i][j]+"                  ");
-			}System.out.println(" ");
-
-		}
 		if(cursor > 0 && cursor < Result.length) {
-			System.out.println("cursor  "+cursor);
-			return  Result[cursor][arg0-1];
+			return  Result[cursor-1][arg0-1];
 		}
 		return null;
 	}
@@ -688,8 +674,7 @@ public class ResultSet implements java.sql.ResultSet{
 
 	@Override
 	public boolean isClosed() throws SQLException {
-		if(instance == null) return true;
-		return false;
+		return Isclosed;
 	}
 
 	@Override
@@ -725,13 +710,11 @@ public class ResultSet implements java.sql.ResultSet{
 	}
 
 	@Override
-	public boolean next() throws SQLException {
+	public boolean next() throws SQLException {//System.out.println(Result.length+"[");
 		if(Result == null) return false;
-		if(cursor+1 <= Result.length-1) { 
-			System.out.println("the lenght with out the colomn name"+(Result.length-1));
+		if(cursor+1 <= Result.length) { 
 			cursor++;
 			return true;}
-
 		return false;
 	}
 

@@ -75,6 +75,11 @@ public class Statement implements java.sql.Statement {
 		Facade f=new Facade();
 		if(waitTimeout==0) {
 			try {
+				if(sql.toLowerCase().contains("create")||sql.toLowerCase().contains("drop")) {
+					boolean n =db.executeStructureQuery(sql);
+					//System.out.println("mmm"+n);
+					return n;
+				}
 				f.do_query(sql);
 				timeout = false ;
 				return true;
@@ -116,14 +121,15 @@ public class Statement implements java.sql.Statement {
 		
 		if(waitTimeout==0) {
 			
-			eg.edu.alexu.csd.oop.ResultSet r =  eg.edu.alexu.csd.oop.ResultSet.get_instance();
+			eg.edu.alexu.csd.oop.ResultSet r =  new eg.edu.alexu.csd.oop.ResultSet();
 			Object[][] b= db.executeQuery(sql);
-				r.set_Result(b,this);
-				System.out.println("array without islam yousry");
+				r.set_Result(b,db.get_cols_names(),this);
+			//	System.out.println("array without islam yousry");
 				for(int i = 0;i < b.length ; i++) {
 					for(int j = 0 ; j < b[0].length;j++) {
-						System.out.print(b[i][j]+"                  ");
-					}System.out.println(" ");
+					//	System.out.print(b[i][j]+"                  ");
+					}
+					//System.out.println(" ");
 
 				}
 			return r;
@@ -132,8 +138,8 @@ public class Statement implements java.sql.Statement {
 			timer.schedule(interruptTimerTask, waitTimeout);
 			try {
 				
-				eg.edu.alexu.csd.oop.ResultSet r =  eg.edu.alexu.csd.oop.ResultSet.get_instance();
-			r.set_Result(db.executeQuery(sql),this);
+				eg.edu.alexu.csd.oop.ResultSet r =  new eg.edu.alexu.csd.oop.ResultSet();
+			r.set_Result(db.executeQuery(sql),db.get_cols_names(),this);
 			timeout = false ;
 		
 				return r;
@@ -150,7 +156,9 @@ public class Statement implements java.sql.Statement {
 	public int executeUpdate(String sql) throws SQLException {
 		if(waitTimeout==0) {
 			timeout = false ;
-			return db.executeUpdateQuery(sql);
+			int h=db.executeUpdateQuery(sql);
+			//System.out.println("here is our h"+h);
+			return h;
 		}
 		else {
 		timer.schedule(interruptTimerTask, waitTimeout);

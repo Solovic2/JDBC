@@ -25,7 +25,7 @@ public class SanityTest {
         Connection connection = driver.connect("jdbc:xmldb://localhost", info);
         //System.out.println("000000"+info.getProperty("path"));
         Statement statement = connection.createStatement();
-        statement.execute("DROP DATABASE " + databaseName);
+       // statement.execute("DROP DATABASE " + databaseName);
         if(drop)
             statement.execute("CREATE DATABASE " + databaseName);
         statement.close();
@@ -115,9 +115,11 @@ public class SanityTest {
     @Test
     public void testCaseInsensitive() throws SQLException
     {
+    	
         Connection connection = createDatabase("TestDB", true);
-        
+     
         try {
+        	
             Statement statement = connection.createStatement();
             statement.execute("Create TABLE table_name1(column_name1 varchar, column_name2 int, column_name3 varchar)");
             
@@ -203,6 +205,7 @@ public class SanityTest {
     public void testScenario_3() throws SQLException
     {
         Connection connection = createDatabase("TestDB", true);
+        
         
         try {
             Statement statement = connection.createStatement();

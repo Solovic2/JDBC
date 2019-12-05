@@ -9,6 +9,7 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData{
 	
 	private static ResultSetMetaData instance = new ResultSetMetaData();
 	private Object[][] Result = null;
+	private String[] cols_names = null;
 	private String table_name=null;
 	/**********************************Singleton Design Pattern*****************************************/
 	
@@ -19,10 +20,10 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData{
 	}
 	
 	/************************************************************************************/
-	public void set_Result(Object[][] x, Statement y) {
-		
+	public void set_Result(Object[][] x,String[] cols_names,Statement y) {
 		Result = x;
-		table_name=y.get_table_name();
+		this.cols_names = cols_names; 
+		table_name = y.get_table_name();
 	}
 	/**********************************************************************************************************/
 	

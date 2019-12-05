@@ -15,15 +15,6 @@ import java.util.logging.Logger;
 
 public class Driver implements java.sql.Driver {
 
-	/*****************************Singleton Design Pattern********************************************/
-	private static Driver instance = new Driver(); 
-	
-	private  Driver(){}
-	
-	public static Driver get_instance() {
-		return instance;
-	}
-	/*******************************************************************************************************/
 	String save=null;
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
@@ -51,34 +42,17 @@ public class Driver implements java.sql.Driver {
 	public Connection connect(String url, Properties info) throws SQLException {
 		File dir = (File) info.get("path");
 		String path = dir.getAbsolutePath();
-/*		File newfile = new File("F:\\personal pics\\Bahaa\\programs\\second year term 1\\programming\\omarmohamedemam-dbms-1410883b5be8\\DB_PATHES.txt");
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(newfile));
-			String line=null;
-			while((line = br.readLine()) != null) {
-				if(line.trim().contains("PATH: "+path)) {
-					
-				}
-			}
-			br.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-		Connection cc=Connection.get_instance();
+
+		Connection cc= new Connection();
 		if(acceptsURL(path)) {
-//			cc.setElconnect(save);
 			return cc;
 		}
 		return cc;
-//		return null;
 	}
 
 	@Override
 	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
 		DriverPropertyInfo[] dpi=new DriverPropertyInfo[0];
-	
 		return null;
 	}
 	

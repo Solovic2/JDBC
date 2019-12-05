@@ -18,15 +18,8 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 public class Connection implements java.sql.Connection {
-	/*****************************Singleton Design Pattern********************************************/
-	private static Connection instance = new Connection(); 
+	private boolean Isclosed = false;
 	
-	private  Connection(){}
-	
-	public static Connection get_instance() {
-		return instance;
-	}
-	/*******************************************************************************************************/
 	@Override
 	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
 		// TODO Auto-generated method stub
@@ -54,7 +47,7 @@ public class Connection implements java.sql.Connection {
 	@Override
 	public void close() throws SQLException {
 		// TODO Auto-generated method stub
-		instance = null;
+		Isclosed = true;
 	}
 
 	@Override
@@ -96,8 +89,10 @@ public class Connection implements java.sql.Connection {
 	@Override
 	public Statement createStatement() throws SQLException {
 		// TODO Auto-generated method stub
-		Statement stat = new Statement();
-		return stat;
+		if(!Isclosed) {
+			Statement stat = new Statement();
+			return stat;}
+		return null;
 	}
 
 	@Override
