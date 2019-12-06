@@ -42,14 +42,14 @@ public class Driver implements java.sql.Driver {
 	public Connection connect(String url, Properties info) throws SQLException {
 		File dir = (File) info.get("path");
 		String path = dir.getAbsolutePath();
-
-		Connection cc= new Connection();
-		if(acceptsURL(path)) {
-			return cc;
+		
+		if(true) {
+			ConnectionManager cm = ConnectionManager.get_instance();
+			return cm.getConnection(path);
 		}
-		return cc;
+		return null;
 	}
-
+	
 	@Override
 	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
 		DriverPropertyInfo[] dpi=new DriverPropertyInfo[0];
