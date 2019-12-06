@@ -21,6 +21,15 @@ public class Statement implements java.sql.Statement {
 	private String table_name = null ;
 	private DB db=DB.get_instance();
 	private Stack<String> sql_list=new Stack<String>();
+	public void reload() {
+		Reload_DATA ourinput = new Reload_DATA();
+		try {
+			ourinput.reload();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	public String get_table_name() {
 		return table_name;
 	}
