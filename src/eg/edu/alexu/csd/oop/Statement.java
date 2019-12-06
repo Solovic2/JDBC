@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.util.*;
 import eg.edu.alexu.csd.oop.db.Check;
 import eg.edu.alexu.csd.oop.db.DB;
 import eg.edu.alexu.csd.oop.db.Facade;
+import eg.edu.alexu.csd.oop.db.Reload_DATA;
 
 public class Statement implements java.sql.Statement {
 	private Timer timer = new Timer(true);
@@ -21,6 +23,15 @@ public class Statement implements java.sql.Statement {
 	private String table_name = null ;
 	private DB db=DB.get_instance();
 	private Stack<String> sql_list=new Stack<String>();
+	public void reload() {
+		Reload_DATA ourinput = new Reload_DATA();
+		try {
+			ourinput.reload();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	public String get_table_name() {
 		return table_name;
 	}
@@ -84,7 +95,7 @@ public class Statement implements java.sql.Statement {
 				timeout = false ;
 				return true;
 			}catch (SQLException e) {
-				return false;
+				throw new SQLException();
 			}
 		}
 		else {
@@ -157,7 +168,7 @@ public class Statement implements java.sql.Statement {
 		if(waitTimeout==0) {
 			timeout = false ;
 			int h=db.executeUpdateQuery(sql);
-			//System.out.println("here is our h"+h);
+//			System.out.println("here is our h"+h);
 			return h;
 		}
 		else {

@@ -76,7 +76,7 @@ public class SmokeTest {
             Statement statement = connection.createStatement();
             
             boolean created = statement.execute("CREATE TABLE table_name1(column_name1 varchar, column_name2 int, column_name3 varchar)");
-            System.out.println(created);
+           
             Assert.assertFalse("Create table succeed when table already exists", created);
         }
         catch (Throwable e){
@@ -296,7 +296,7 @@ public class SmokeTest {
             Statement statement = connection.createStatement();
             statement.execute("CREATE TABLE table_name13(column_name1 varchar, column_name2 int, column_name3 varchar)");
             int count1 = statement.executeUpdate("INSERT INTO table_name13(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)");
-           System.out.println("count1 "+count1);
+        
            
             Assert.assertNotEquals("Insert returned zero rows", 0, count1);
             int count2 = statement.executeUpdate("INSERT INTO table_name13(column_NAME1, column_name2, COLUMN_name3) VALUES ('value1', 4, 'value3')");

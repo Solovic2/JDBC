@@ -21,6 +21,15 @@ public class Connection implements java.sql.Connection {
 	private boolean Isclosed = false;
 	
 	@Override
+	public Statement createStatement() throws SQLException {
+		// TODO Auto-generated method stub
+		if(!Isclosed) {
+			Statement stat = new Statement();
+			return stat;}
+		return null;
+	}
+	
+	@Override
 	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
@@ -86,14 +95,7 @@ public class Connection implements java.sql.Connection {
 		return null;
 	}
 
-	@Override
-	public Statement createStatement() throws SQLException {
-		// TODO Auto-generated method stub
-		if(!Isclosed) {
-			Statement stat = new Statement();
-			return stat;}
-		return null;
-	}
+
 
 	@Override
 	public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {

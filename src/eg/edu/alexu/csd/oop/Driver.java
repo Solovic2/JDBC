@@ -53,9 +53,9 @@ public class Driver implements java.sql.Driver {
 	@Override
 	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
 		DriverPropertyInfo[] dpi=new DriverPropertyInfo[0];
-		return null;
+		return dpi;
 	}
-	
+	/********************************************************************************************/
 	@Override
 	public int getMajorVersion() {
 		// TODO Auto-generated method stub
